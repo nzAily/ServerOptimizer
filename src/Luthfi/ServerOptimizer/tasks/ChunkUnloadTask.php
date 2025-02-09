@@ -13,9 +13,9 @@ class ChunkUnloadTask extends Task {
         $this->plugin = $plugin;
     }
 
-    public function onRun(): void {
-        foreach ($this->plugin->getServer()->getLevels() as $level) {
-            $level->unloadChunks(true);
-        }
-    }
+	public function onRun(): void {
+		foreach ($this->plugin->getServer()->getWorldManager()->getWorlds() as $world) {
+			$world->unloadChunks(true);
+		}
+	}
 }
