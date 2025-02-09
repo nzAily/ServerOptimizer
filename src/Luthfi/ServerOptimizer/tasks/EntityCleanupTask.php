@@ -14,16 +14,20 @@ class EntityCleanupTask extends Task {
         $this->plugin = $plugin;
     }
 
-    public function onRun(int $currentTick) {
-        $level = $this->plugin->getServer()->getLevels()[0];
-        $count = 0;
+	public function onRun(): void {
+		$level = $this->plugin->getServer()->getWorldManager()->getDefaultWorld();
+		if ($level === null) {
+			return;
+		}
 
-        foreach ($level->getEntities() as $entity) {
-            if (!$entity instanceof Player) {
-                $entity->close();
-                $count++;
-            }
-        }
-        $this->plugin->getLogger()->info(TF::GREEN . "Cleared " . $count . " entities.");
-    }
+		$count = 0;
+		foreach ($level->getEntities() as $entity) {
+			if (!$entity instanceof Player) {
+				$entity->flagForDespawn();
+				$count++;
+			}
+		}
+
+		$this->plugin->getLogger()->info(TF::GREEN . "Cleared " . $count . " entities.");
+	}
 }
